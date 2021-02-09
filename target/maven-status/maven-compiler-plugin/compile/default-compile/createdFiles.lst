@@ -19,7 +19,6 @@ club\codermax\rpc\spring\ProviderBeanDefinitionParser.class
 club\codermax\rpc\spring\RegisterBeanDefinitionParser.class
 club\codermax\rpc\framework\ServiceConsumer.class
 club\codermax\rpc\framework\ServiceProvider.class
-club\codermax\rpc\register\Register.class
 club\codermax\rpc\serializer\impl\DefaultJavaSerializer.class
 club\codermax\rpc\serializer\impl\User.class
 club\codermax\rpc\serializer\Serializer.class

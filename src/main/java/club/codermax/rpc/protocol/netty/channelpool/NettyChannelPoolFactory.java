@@ -51,45 +51,9 @@ public class NettyChannelPoolFactory {
         return INSTANCE;
     }
 
-    private List<String> serviceMetaDataList = new ArrayList<>();
 
 
     // 根据配置文件中需要调用的接口信息来初始化Channel
-    /*public void initNettyChannelPoolFactory(List<String> providerList) {
-        long a1 = System.currentTimeMillis();
-        // 获取服务提供者地址列表
-        Set<URL> set = new HashSet<>();
-        for (String provide : providerList) {
-            String[] s = provide.split("\\|");
-            String serviceIp = s[0];
-            int servicePort = Integer.parseInt(s[1]);
-            URL url = new URL(serviceIp, servicePort);
-            set.add(url);
-        }
-        long a2 = System.currentTimeMillis();
-        logger.warn("获取服务提供者地址列表" + (a2 - a1));
-
-        // 为每个 ip 端口 建立多个Channel并放入到阻塞队列中
-        for (URL url : set) {
-            int channelSize = 0;
-            if (channelSize < channelConnectSize) {
-                Channel channel = null;
-                while (channel == null) {  // 确保能够注册进入
-                    channel = registerChannel(url);
-                }
-                channelSize++;
-
-                ArrayBlockingQueue<Channel> queue = channelPoolMap.get(url);
-                if (queue == null) {
-                    queue = new ArrayBlockingQueue<>(channelConnectSize);
-                    channelPoolMap.put(url, queue);
-                }
-                queue.offer(channel);
-            }
-        }
-        logger.warn("为每个 ip 端口 建立多个Channel并放入到阻塞队列中" + (System.currentTimeMillis() - a2));
-    }*/
-
     public void initNettyChannelPoolFactory(List<String> providerList) {
         long a1 = System.currentTimeMillis();
         // 获取服务提供者地址列表
@@ -101,17 +65,14 @@ public class NettyChannelPoolFactory {
             URL url = new URL(serviceIp, servicePort);
             set.add(url);
         }
-        long a2 = System.currentTimeMillis();
-        logger.warn("获取服务提供者地址列表" + (a2 - a1));
+
         // 为每个 ip 端口 建立多个Channel并放入到阻塞队列中
         for (URL url : set) {
             int channelSize = 0;
             if (channelSize < channelConnectSize) {
                 Channel channel = null;
                 while (channel == null) {  // 确保能够注册进入
-                    long a3 = System.currentTimeMillis();
                     channel = registerChannel(url);
-                    logger.warn("registerChannel耗时：" + (System.currentTimeMillis() - a3));
                 }
                 channelSize++;
 
@@ -123,7 +84,6 @@ public class NettyChannelPoolFactory {
                 queue.offer(channel);
             }
         }
-        logger.warn("为每个 ip 端口 建立多个Channel并放入到阻塞队列中" + (System.currentTimeMillis() - a2));
     }
 
 

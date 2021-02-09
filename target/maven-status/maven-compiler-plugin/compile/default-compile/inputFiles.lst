@@ -29,7 +29,6 @@ E:\rpc\code\myRPC\src\main\java\club\codermax\rpc\serializer\NettyEncoderHandler
 E:\rpc\code\myRPC\src\main\java\club\codermax\rpc\protocol\netty\NettyServerHandler.java
 E:\rpc\code\myRPC\src\main\java\club\codermax\rpc\register\RegisterCenter.java
 E:\rpc\code\myRPC\src\main\java\club\codermax\rpc\spring\ProcotolBeanDefinitionParser.java
-E:\rpc\code\myRPC\src\main\java\club\codermax\rpc\register\Register.java
 E:\rpc\code\myRPC\src\main\java\club\codermax\rpc\register\redis\RedisCenter.java
 E:\rpc\code\myRPC\src\main\java\club\codermax\rpc\spring\RegisterBeanDefinitionParser.java
 E:\rpc\code\myRPC\src\main\java\club\codermax\rpc\framework\ServiceProvider.java

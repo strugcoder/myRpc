@@ -26,7 +26,7 @@ public class MessageCallBack {
 
             // 设置一下超时时间，rpc服务器太久没有响应的话，直接返回空,
             // 也就是超过一秒之后，进入条件队列执行，无论是否获得到了响应
-            finish.await(10 * 100, TimeUnit.MILLISECONDS);
+            finish.await(10 * 1000, TimeUnit.MILLISECONDS);
             if (this.rpcResponse != null) {
                 return this.rpcResponse.getData();
             }

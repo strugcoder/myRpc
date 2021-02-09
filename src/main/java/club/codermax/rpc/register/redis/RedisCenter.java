@@ -8,12 +8,14 @@ import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RedisCenter implements RegisterCenter {
 
 
     private static final Logger logger = LoggerFactory.getLogger(RedisCenter.class);
-
+    //服务提供者列表，key：服务提供者接口，value：服务提供者服务方法列表
+    private static final Map<String,List<String>> providerServiceMap = new ConcurrentHashMap<>();
 
     private static RedisCenter redisCenter = new RedisCenter();
 
@@ -27,6 +29,18 @@ public class RedisCenter implements RegisterCenter {
     private final static String ROOT = "rpc:";
     private final static String PROVIDER = "provider:";
 
+    public List<String> getServiceProvide(String consumerName) {
+        if (consumerName == null) return null;
+
+        if (providerServiceMap.get(consumerName) == null) {
+            synchronized (RedisCenter.class) {
+                if (providerServiceMap.get(consumerName) == null) {
+                    providerServiceMap.put(consumerName, getService(consumerName));
+                }
+            }
+        }
+        return providerServiceMap.get(consumerName);
+    }
 
     @Override
     public void registerProvider(List<ServiceProvider> serviceList) {
@@ -61,7 +75,6 @@ public class RedisCenter implements RegisterCenter {
             }
         }
     }
-
     @Override
     public List<String> getService(String consumerName) {
         if (consumerName == null) {
@@ -71,7 +84,6 @@ public class RedisCenter implements RegisterCenter {
         List<String> valueList = new ArrayList<>();
         // 连接redis，获取服务，加锁
         synchronized (RedisCenter.class) {
-
             String redisKey = ROOT + PROVIDER + consumerName;
             Set<String> key = redisClient.getValues(redisKey);
             Iterator<String> iterator = key.iterator();
@@ -79,6 +91,7 @@ public class RedisCenter implements RegisterCenter {
             for (int i = 0; i < key.size(); i++) {
                 values[i] = iterator.next();
             }
+            logger.warn("key的size" + key.size() + "===" + values[0]);
 
             for (int i = 0; i < values.length; i++) {
                 valueList.add(values[i]);

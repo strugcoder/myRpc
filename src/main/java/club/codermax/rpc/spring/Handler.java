@@ -33,38 +33,35 @@ public class Handler<T> implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Configuration configuration = Configuration.getInstance();
         Procotol procotol = null;
-        if("Netty".equalsIgnoreCase(configuration.getProcotol())){
+        if ("Netty".equalsIgnoreCase(configuration.getProcotol())) {
             procotol = new NettyProcotol();
-        }else if("Http".equalsIgnoreCase(configuration.getProcotol())){
+        } else if ("Http".equalsIgnoreCase(configuration.getProcotol())) {
             logger.warn("Http 未实现");
-        }else if("Socket".equalsIgnoreCase(configuration.getProcotol())){
+        } else if ("Socket".equalsIgnoreCase(configuration.getProcotol())) {
             logger.warn("socket 未实现");
-        }else{
+        } else {
             procotol = new NettyProcotol();
         }
 
         // 服务接口名称
         String serviceKey = interfaceClass.getName();
         // 获取服务接口对应的服务提供者列表，因为一个接口可能对应放多个实现
-        List<String> providerServices = RedisCenter.getInstance().getService(serviceKey);
+        List<String> providerServices = RedisCenter.getInstance().getServiceProvide(serviceKey);
 
         // 根据负载策略，从服务提供者列表选取本次调用的服务提供者
         String stragety = configuration.getStragety();
-        if (stragety == null || stragety == "") {
+        if (stragety == null || stragety.equals("")) {
             stragety = "random";
         }
         logger.info("选择负载均衡策略是：" + stragety);
         LoadStrategy loadStrategyService = LoadBalanceEngine.queryLoadStrategy(stragety);
         String[] serviceProvider = loadStrategyService.select(providerServices).split("\\|");
         URL url = new URL(serviceProvider[0], Integer.parseInt(serviceProvider[1]));
-
         String impl = serviceProvider[2];
         int timeout = 20000;
-        RpcRequest invocation = new RpcRequest(UUID.randomUUID().toString(), interfaceClass.getName(), method.getName(),args,method.getParameterTypes(), impl, timeout);
+        RpcRequest invocation = new RpcRequest(UUID.randomUUID().toString(), interfaceClass.getName(), method.getName(), args, method.getParameterTypes(), impl, timeout);
 
-        long a1 = System.currentTimeMillis();
         Object res = procotol.send(url, invocation);
-        logger.warn("Handler#procotol.send耗时：" + (System.currentTimeMillis() - a1));
         return res;
     }
 }

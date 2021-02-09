@@ -18,7 +18,7 @@ public class NettyServer {
 
     private static NettyServer INSTANCE = new NettyServer();
     // ? ? ? ? ?
-    private static Executor executor = Executors.newFixedThreadPool(30);
+    private static Executor executor = Executors.newCachedThreadPool();
 
     private NettyServer() {
     }

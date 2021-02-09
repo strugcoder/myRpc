@@ -44,18 +44,6 @@ public class ServiceBeanDefinitionParser implements BeanDefinitionParser {
         BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
         beanDefinitionRegistry.registerBeanDefinition(ref,definition);
 
-        //获取服务注册中心
-//        RedisRegisterCenter registerCenter4Consumer = RedisRegisterCenter.getInstance();
-
-        //将消费者信息注册到注册中心
-//        ServiceConsumer invoker = new ServiceConsumer();
-//        List<ServiceConsumer> consumers = new ArrayList<>();
-//        consumers.add(invoker);
-//        invoker.setConsumer(clazz);
-//        invoker.setServiceObject(interfaces);
-//        invoker.setGroupName("");
-//        registerCenter4Consumer.registerConsumer(consumers);
-
 
         return definition;
     }
